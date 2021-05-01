@@ -30,6 +30,7 @@
 #pragma once
 
 #include "pixel_converter_impl.h"
+#include <emmintrin.h>
 #include <xmmintrin.h>
 
 namespace clan
