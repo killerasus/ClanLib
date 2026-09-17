@@ -328,7 +328,7 @@ echo ""
 if test "$enable_clanDisplay" != "no"; then
 	echo "Checking for clanDisplay stuff"
 	echo "=============================="
-	CLANLIB_CHECK_LIB(ttf, [`cat $srcdir/Setup/Tests/ttf.cpp`], clanDisplay, [ *** Cannot find ttf (freetype) (See http://freetype.sourceforge.net )  (Try libfreetype6-dev or better) ], [`freetype-config --libs` ], [ `freetype-config --cflags`])
+	CLANLIB_CHECK_LIB(ttf, [`cat $srcdir/Setup/Tests/ttf.cpp`], clanDisplay, [ *** Cannot find ttf (freetype) (See http://freetype.sourceforge.net )  (Try libfreetype6-dev or better) ], [`pkg-config freetype2 --libs` ], [ `pkg-config freetype2 --cflags`])
 
 	dnl  Optional linux/joystick.h
 	AC_CHECK_HEADERS(linux/joystick.h, has_linux_joystick=yes)
