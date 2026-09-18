@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "API/D3D/api_d3d.h"
 #include "API/Display/TargetProviders/vertex_array_buffer_provider.h"
 #include "API/Core/System/databuffer.h"
 #include "d3d_share_list.h"
@@ -35,7 +36,9 @@
 namespace clan
 {
 
-class D3DVertexArrayBufferProvider : public VertexArrayBufferProvider, D3DSharedResource
+// Note: exported (unlike most D3D provider classes) because clanCompute
+// uses D3DVertexArrayBufferProvider::get_buffer for OpenCL sharing.
+class CL_API_D3D D3DVertexArrayBufferProvider : public VertexArrayBufferProvider, D3DSharedResource
 {
 /// \name Construction
 /// \{

@@ -28,12 +28,13 @@
 
 #pragma once
 
+#include "API/Display/api_display.h"
 #include <dwmapi.h>
 
 namespace clan
 {
 
-class DwmFunctions
+class CL_API_DISPLAY DwmFunctions
 {
 public:
 	static bool is_composition_enabled();

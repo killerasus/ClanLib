@@ -28,12 +28,15 @@
 
 #pragma once
 
+#include "API/D3D/api_d3d.h"
 #include "API/Display/TargetProviders/element_array_buffer_provider.h"
 
 namespace clan
 {
 
-class D3DElementArrayBufferProvider : public ElementArrayBufferProvider
+// Note: exported (unlike most D3D provider classes) because clanCompute
+// uses D3DElementArrayBufferProvider::get_buffer for OpenCL sharing.
+class CL_API_D3D D3DElementArrayBufferProvider : public ElementArrayBufferProvider
 {
 /// \name Construction
 /// \{

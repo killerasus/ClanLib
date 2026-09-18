@@ -66,7 +66,7 @@ enum VertexAttributeDataType
 };
 
 /// \brief Primitives array description.
-class PrimitivesArray
+class CL_API_DISPLAY PrimitivesArray
 {
 /// \name Construction
 /// \{

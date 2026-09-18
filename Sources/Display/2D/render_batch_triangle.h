@@ -29,6 +29,7 @@
 
 #pragma once
 
+#include "API/Display/api_display.h"
 #include "API/Display/Render/texture.h"
 #include "API/Display/Render/graphic_context.h"
 #include "API/Display/Render/blend_state.h"
@@ -43,7 +44,7 @@ struct Surface_DrawParams1;
 class RenderBatchBuffer;
 class Quadf;
 
-class RenderBatchTriangle : public RenderBatcher
+class CL_API_DISPLAY RenderBatchTriangle : public RenderBatcher
 {
 public:
 	RenderBatchTriangle(GraphicContext &gc, RenderBatchBuffer *batch_buffer);

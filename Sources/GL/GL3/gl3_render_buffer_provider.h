@@ -29,7 +29,7 @@
 
 #pragma once
 
-
+#include "API/GL/api_gl.h"
 #include "gl3_graphic_context_provider.h"
 #include "API/Display/TargetProviders/render_buffer_provider.h"
 #include "API/Core/System/disposable_object.h"
@@ -37,7 +37,9 @@
 namespace clan
 {
 
-class GL3RenderBufferProvider : public RenderBufferProvider, DisposableObject
+// Note: exported (unlike most GL provider classes) because clanCompute
+// uses GL3RenderBufferProvider::get_handle for OpenCL sharing.
+class CL_API_GL GL3RenderBufferProvider : public RenderBufferProvider, DisposableObject
 {
 /// \name Construction
 /// \{

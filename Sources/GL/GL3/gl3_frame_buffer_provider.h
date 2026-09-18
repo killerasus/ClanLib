@@ -38,7 +38,11 @@
 namespace clan
 {
 
-class CL_API_DISPLAY GL3FrameBufferProvider : public FrameBufferProvider, DisposableObject
+// Note: no CL_API macro here, like all other GL provider classes in this
+// module (used only inside clanGL itself). The CL_API_DISPLAY it carried
+// was a mistake: it made every TU see dllimport with nothing to import
+// (C4273, LNK4217, missing vftable).
+class GL3FrameBufferProvider : public FrameBufferProvider, DisposableObject
 {
 /// \name Construction
 /// \{

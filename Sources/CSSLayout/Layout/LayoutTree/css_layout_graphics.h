@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "API/CSSLayout/api_csslayout.h"
 #include "API/Core/Math/rect.h"
 #include "API/Display/2D/image.h"
 #include "API/Display/2D/canvas.h"
@@ -42,7 +43,7 @@ class Font;
 class FontMetrics;
 class CSSResourceCache;
 
-class CSSLayoutGraphics
+class CL_API_CSSLAYOUT CSSLayoutGraphics
 {
 public:
 	CSSLayoutGraphics(Canvas &canvas, CSSResourceCache *cache, const Rect &viewport, CSSLayout::ClipWrapper *clip_wrapper = 0);

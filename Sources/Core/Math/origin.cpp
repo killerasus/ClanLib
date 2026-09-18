@@ -37,8 +37,8 @@ namespace clan
 
 // Explicit instantiate the versions we use:
 
-template class Pointx<int>;
-template class Pointx<float>;
-template class Pointx<double>;
+template class CL_TEMPLATE_EXPORT Pointx<int>;
+template class CL_TEMPLATE_EXPORT Pointx<float>;
+template class CL_TEMPLATE_EXPORT Pointx<double>;
 
 }

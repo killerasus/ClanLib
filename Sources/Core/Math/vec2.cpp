@@ -41,7 +41,7 @@ Angle Vec2<Type>::angle(const Vec2<Type>& v) const
 	return Angle((float)acosf(float(dot(v)/(length()*v.length()))), angle_radians);
 }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 Angle Vec2<int>::angle(const Vec2<int>& v) const
 {
 	float this_x = (float) x;
@@ -61,7 +61,7 @@ Angle Vec2<Type>::angle_normed(const Vec2<Type>& v) const
 	return Angle((float)acosf(float(dot(v))), angle_radians);
 }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 Angle Vec2<int>::angle_normed(const Vec2<int>& v) const
 {
 	float this_x = (float) x;
@@ -79,7 +79,7 @@ Angle Vec2<Type>::angle_line(const Vec2<Type>& v) const
 	return Angle( atan2f(v.y - y, v.x - x), angle_radians);
 }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 Angle Vec2<int>::angle_line(const Vec2<int>& v) const
 {
 	float this_x = (float) x;
@@ -109,7 +109,7 @@ Type Vec2<Type>::distance(const Vec2<Type>& vector) const
 }
 
 // For floats
-template<>
+template<> CL_TEMPLATE_EXPORT
 float Vec2f::distance(const Vec2f &vector) const
 {
 	float value_x, value_y;
@@ -119,7 +119,7 @@ float Vec2f::distance(const Vec2f &vector) const
 }
 
 // For doubles
-template<>
+template<> CL_TEMPLATE_EXPORT
 double Vec2d::distance(const Vec2d &vector) const
 {
 	double value_x, value_y;
@@ -165,22 +165,22 @@ Vec2<Type> Vec2<Type>::rotate(const Vec2<Type>& vector, const Vec2<Type>& hotspo
 template<typename Type>
 Type Vec2<Type>::round_value(float value) const { return (Type) value; }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 int Vec2<int>::round_value(float value) const { return (int) floorf(value + 0.5f); }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 unsigned int Vec2<unsigned int>::round_value(float value) const { return (unsigned int) floorf(value + 0.5f); }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 short Vec2<short>::round_value(float value) const { return (short) floorf(value + 0.5f); }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 unsigned short Vec2<unsigned short>::round_value(float value) const { return (unsigned short) floorf(value + 0.5f); }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 char Vec2<char>::round_value(float value) const { return (char) floorf(value + 0.5f); }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 unsigned char Vec2<unsigned char>::round_value(float value) const { return (unsigned char) floorf(value + 0.5f); }
 
 template<typename Type>
@@ -220,13 +220,13 @@ Pointx<Type> Vec2<Type>::calc_origin(Origin origin, const Sizex<Type> &size)
 }
 
 // Explicit instantiate the versions we use:
-template class Vec2<unsigned char>;
-template class Vec2<char>;
-template class Vec2<unsigned short>;
-template class Vec2<short>;
-template class Vec2<unsigned int>;
-template class Vec2<int>;
-template class Vec2<float>;
-template class Vec2<double>;
+template class CL_TEMPLATE_EXPORT Vec2<unsigned char>;
+template class CL_TEMPLATE_EXPORT Vec2<char>;
+template class CL_TEMPLATE_EXPORT Vec2<unsigned short>;
+template class CL_TEMPLATE_EXPORT Vec2<short>;
+template class CL_TEMPLATE_EXPORT Vec2<unsigned int>;
+template class CL_TEMPLATE_EXPORT Vec2<int>;
+template class CL_TEMPLATE_EXPORT Vec2<float>;
+template class CL_TEMPLATE_EXPORT Vec2<double>;
 
 }

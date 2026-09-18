@@ -29,6 +29,8 @@
 
 #pragma once
 
+#include "../api_core.h"
+
 namespace clan
 {
 /// \addtogroup clanCore_I_O_Data clanCore I/O Data
@@ -37,7 +39,7 @@ namespace clan
 class DataBuffer;
 
 /// \brief Deflate compressor
-class ZLibCompression
+class CL_API_CORE ZLibCompression
 {
 /// \name Operations
 /// \{

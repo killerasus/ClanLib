@@ -41,7 +41,10 @@ namespace clan
 /// \brief Storage Buffer Vector
 ///
 template<typename Type>
-class CL_API_DISPLAY StorageVector : public StorageBuffer
+// Note: no CL_API_DISPLAY (like Rectx/ComPtr): fully defined in this
+// header (members using it, e.g. Scene3D passes, must instantiate it
+// locally); dllimport would leave nothing to import.
+class StorageVector : public StorageBuffer
 {
 /// \name Construction
 /// \{

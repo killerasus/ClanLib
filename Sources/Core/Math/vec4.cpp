@@ -85,7 +85,7 @@ Angle Vec4<Type>::angle3(const Vec4<Type>& v) const
 }
 
 // For floats
-template<>
+template<> CL_TEMPLATE_EXPORT
 float Vec4f::distance3(const Vec4f &vector) const
 {
 	float value_x, value_y, value_z;
@@ -96,7 +96,7 @@ float Vec4f::distance3(const Vec4f &vector) const
 }
 
 // For doubles
-template<>
+template<> CL_TEMPLATE_EXPORT
 double Vec4d::distance3(const Vec4d &vector) const
 {
 	double value_x, value_y, value_z;
@@ -130,7 +130,7 @@ Type Vec4<Type>::distance4(const Vec4<Type>& vector) const
 }
 
 // For double
-template<>
+template<> CL_TEMPLATE_EXPORT
 double Vec4d::distance4(const Vec4d &vector) const
 {
 	double value_x, value_y, value_z, value_w;
@@ -142,7 +142,7 @@ double Vec4d::distance4(const Vec4d &vector) const
 }
 
 // For float
-template<>
+template<> CL_TEMPLATE_EXPORT
 float Vec4f::distance4(const Vec4f &vector) const
 {
 	float value_x, value_y, value_z, value_w;
@@ -212,13 +212,13 @@ Vec4<Type> Vec4<Type>::round(const Vec4<Type>& vector)
 }
 
 // Explicit instantiate the versions we use:
-template class Vec4<unsigned char>;
-template class Vec4<char>;
-template class Vec4<unsigned short>;
-template class Vec4<short>;
-template class Vec4<unsigned int>;
-template class Vec4<int>;
-template class Vec4<float>;
-template class Vec4<double>;
+template class CL_TEMPLATE_EXPORT Vec4<unsigned char>;
+template class CL_TEMPLATE_EXPORT Vec4<char>;
+template class CL_TEMPLATE_EXPORT Vec4<unsigned short>;
+template class CL_TEMPLATE_EXPORT Vec4<short>;
+template class CL_TEMPLATE_EXPORT Vec4<unsigned int>;
+template class CL_TEMPLATE_EXPORT Vec4<int>;
+template class CL_TEMPLATE_EXPORT Vec4<float>;
+template class CL_TEMPLATE_EXPORT Vec4<double>;
 
 }

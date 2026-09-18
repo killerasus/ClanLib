@@ -75,7 +75,7 @@ Type Vec3<Type>::distance(const Vec3<Type>& vector) const
 }
 
 // For floats
-template<>
+template<> CL_TEMPLATE_EXPORT
 float Vec3f::distance(const Vec3f &vector) const
 {
 	float value_x, value_y, value_z;
@@ -86,7 +86,7 @@ float Vec3f::distance(const Vec3f &vector) const
 }
 
 // For doubles
-template<>
+template<> CL_TEMPLATE_EXPORT
 double Vec3d::distance(const Vec3d &vector) const
 {
 	double value_x, value_y, value_z;
@@ -144,13 +144,13 @@ Vec3<Type> Vec3<Type>::reflect(const Vec3<Type>& incident, const Vec3<Type>& nor
 }
 
 // Explicit instantiate the versions we use:
-template class Vec3<unsigned char>;
-template class Vec3<char>;
-template class Vec3<unsigned short>;
-template class Vec3<short>;
-template class Vec3<unsigned int>;
-template class Vec3<int>;
-template class Vec3<float>;
-template class Vec3<double>;
+template class CL_TEMPLATE_EXPORT Vec3<unsigned char>;
+template class CL_TEMPLATE_EXPORT Vec3<char>;
+template class CL_TEMPLATE_EXPORT Vec3<unsigned short>;
+template class CL_TEMPLATE_EXPORT Vec3<short>;
+template class CL_TEMPLATE_EXPORT Vec3<unsigned int>;
+template class CL_TEMPLATE_EXPORT Vec3<int>;
+template class CL_TEMPLATE_EXPORT Vec3<float>;
+template class CL_TEMPLATE_EXPORT Vec3<double>;
 
 }

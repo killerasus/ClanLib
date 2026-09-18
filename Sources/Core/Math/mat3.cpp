@@ -106,7 +106,7 @@ Mat3<Type> Mat3<Type>::rotate(const Angle &angle, Type x, Type y, Type z, bool n
 }
 
 // For ints
-template<>
+template<> CL_TEMPLATE_EXPORT
 Mat3<int> Mat3<int>::rotate(const Angle &angle, int x, int y, int z, bool normalize)
 {
 	if (normalize)
@@ -317,8 +317,8 @@ Mat3<Type> &Mat3<Type>::transpose()
 // Mat3 implementation:
 
 // Explicit instantiate the versions we use:
-template class Mat3<int>;
-template class Mat3<float>;
-template class Mat3<double>;
+template class CL_TEMPLATE_EXPORT Mat3<int>;
+template class CL_TEMPLATE_EXPORT Mat3<float>;
+template class CL_TEMPLATE_EXPORT Mat3<double>;
 
 }

@@ -149,8 +149,8 @@ bool Quadx<Type>::is_inside(const Vec2<Type> &point) const
 }
 
 // Explicit instantiate the versions we use:
-template class Quadx<int>;
-template class Quadx<float>;
-template class Quadx<double>;
+template class CL_TEMPLATE_EXPORT Quadx<int>;
+template class CL_TEMPLATE_EXPORT Quadx<float>;
+template class CL_TEMPLATE_EXPORT Quadx<double>;
 
 }

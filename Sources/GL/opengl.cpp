@@ -66,6 +66,15 @@ namespace clan
 
 cl_tls_variable GLFunctions *OpenGL::functions = 0;
 cl_tls_variable const OpenGLGraphicContextProvider * cl_active_opengl_gc = 0;
+
+// Exported accessor for the thread-local function table (see API/GL/opengl.h).
+// The table pointer itself is thread-local storage and therefore cannot
+// cross DLL boundaries directly (MSVC C2492); other modules must go through
+// this function, which executes in clanGL and reads the calling thread's slot.
+GLFunctions *OpenGL::get_functions()
+{
+	return functions;
+}
 static Mutex cl_function_map_mutex;
 
 // A fix for a compiler bug with compiler version 13.00.9466

@@ -38,7 +38,10 @@ namespace clan
 /// \{
 
 /// \brief Slot
-class CL_API_CORE Slot
+// Note: no CL_API_CORE (like Rectx/ComPtr): fully defined in this header,
+// other DLLs must use it locally; dllimport would leave nothing to import
+// since no .cpp implements these.
+class Slot
 {
 /// \name Construction
 /// \{

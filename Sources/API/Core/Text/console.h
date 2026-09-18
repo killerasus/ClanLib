@@ -51,7 +51,7 @@ namespace clan
 /// \{
 
 /// \brief Console access helper class.
-class Console
+class CL_API_CORE Console
 {
 /// \name Operations
 /// \{

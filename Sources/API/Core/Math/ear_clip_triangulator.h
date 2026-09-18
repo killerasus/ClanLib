@@ -57,7 +57,7 @@ enum PolygonOrientation
 };
 
 /// \brief Ear-clipping triangulator.
-class EarClipTriangulator
+class CL_API_CORE EarClipTriangulator
 {
 /// \name Construction
 /// \{

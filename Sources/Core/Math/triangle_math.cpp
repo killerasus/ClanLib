@@ -49,8 +49,8 @@ bool Trianglex<Type>::point_inside( const Vec2<Type> &point ) const
 }
 
 // Explicit instantiate the versions we use:
-template class Trianglex<int>;
-template class Trianglex<float>;
-template class Trianglex<double>;
+template class CL_TEMPLATE_EXPORT Trianglex<int>;
+template class CL_TEMPLATE_EXPORT Trianglex<float>;
+template class CL_TEMPLATE_EXPORT Trianglex<double>;
 
 }

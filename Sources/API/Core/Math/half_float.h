@@ -31,12 +31,14 @@
 
 #pragma once
 
+#include "../api_core.h"
+
 namespace clan
 {
 /// \addtogroup clanCore_Math clanCore Math
 /// \{
 
-class HalfFloat
+class CL_API_CORE HalfFloat
 {
 public:
 	HalfFloat() : value(0)

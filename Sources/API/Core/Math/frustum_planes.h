@@ -28,13 +28,14 @@
 
 #pragma once
 
+#include "../api_core.h"
 #include "mat4.h"
 #include "vec4.h"
 
 namespace clan
 {
 
-class FrustumPlanes
+class CL_API_CORE FrustumPlanes
 {
 public:
 	FrustumPlanes();

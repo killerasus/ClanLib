@@ -37,7 +37,10 @@ namespace clan
 {
 
 /// (Internal ClanLib Class)
-class CL_API_CORE SlotCallback
+// Note: no CL_API_CORE (like Rectx/ComPtr): fully defined in this header,
+// other DLLs must use it locally; dllimport would leave nothing to import
+// since no .cpp implements these.
+class SlotCallback
 {
 public:
 	SlotCallback() : valid(true), enabled(true) { return; }
@@ -50,7 +53,7 @@ public:
 };
 
 /// (Internal ClanLib Class)
-class CL_API_CORE Slot_Impl
+class Slot_Impl
 {
 public:
 	~Slot_Impl() { if (callback) callback->valid = false; }
@@ -59,7 +62,7 @@ public:
 };
 
 /// (Internal ClanLib Class)
-class CL_API_CORE Signal_Impl
+class Signal_Impl
 {
 public:
 	std::vector< std::shared_ptr<SlotCallback> > connected_slots;

@@ -44,8 +44,11 @@ namespace clan
 
 /// \brief PixelBuffer locking helper.
 ///
+// Note: no CL_API_DISPLAY (like Rectx/ComPtr): fully defined in this
+// header, other DLLs must instantiate it locally; dllimport would leave
+// nothing to import.
 template<typename Type>
-class CL_API_DISPLAY PixelBufferLock
+class PixelBufferLock
 {
 /// \name Construction
 /// \{

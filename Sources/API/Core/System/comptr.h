@@ -35,7 +35,11 @@ namespace clan
 
 template <typename Type>
 /// \brief ComPtr
-class CL_API_CORE ComPtr
+// Note: intentionally no CL_API_CORE here. ComPtr is fully defined in this
+// header; consumers (e.g. clanSound) must instantiate types like
+// ComPtr<IMMDevice> locally, which dllimport would forbid. No DLL export
+// is needed since every TU instantiates what it uses.
+class ComPtr
 {
 public:
 	ComPtr() : ptr(0) { }

@@ -35,6 +35,11 @@
 #include "API/Display/Image/pixel_buffer.h"
 #include "API/Display/ImageProviders/png_provider.h"
 #include "Display/ImageProviders/PNGLoader/png_loader.h"
+// Compile the miniz implementation into this object so the PNG writer
+// (tdefl_write_image_to_png_file_in_memory) is available to clanDisplay.
+// (Core builds its own private copy via Zip/zlib_compression.cpp; the
+// miniz header defaults to declarations-only.)
+#define INCLUDED_FROM_ZLIB_COMPRESSION_CPP
 #include "Core/Zip/miniz.h"
 
 namespace clan

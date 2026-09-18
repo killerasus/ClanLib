@@ -63,7 +63,10 @@ void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *scene)
 		// To do: support this in clanlib
 		OpenGL::set_active(gc);
 		GLenum buffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-		glDrawBuffers(4, buffers);
+		// Note: go through OpenGL::get_functions() rather than the
+		// glDrawBuffers macro: the macro expands to OpenGL::functions, which
+		// is thread-local storage that cannot cross DLL boundaries (C2492).
+		OpenGL::get_functions()->drawBuffers(4, buffers);
 	}
 
 	Size viewport_size = viewport->get_size();
@@ -91,10 +94,11 @@ void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *scene)
 	{
 		// To do: support this in ClanLib
 		OpenGL::set_active(gc);
-		glDisablei(GL_BLEND, 0);
-		glDisablei(GL_BLEND, 1);
-		glDisablei(GL_BLEND, 2);
-		glDisablei(GL_BLEND, 3);
+		// Note: see above - avoid the glDisablei macro (thread-local data).
+		OpenGL::get_functions()->disablei(GL_BLEND, 0);
+		OpenGL::get_functions()->disablei(GL_BLEND, 1);
+		OpenGL::get_functions()->disablei(GL_BLEND, 2);
+		OpenGL::get_functions()->disablei(GL_BLEND, 3);
 	}
 
 	gc.reset_rasterizer_state();
@@ -114,7 +118,8 @@ void GBufferPass::run(GraphicContext &render_gc, Scene_Impl *scene)
 	{
 		OpenGL::set_active(gc);
 		GLenum buffers2[] = { GL_COLOR_ATTACHMENT0 };
-		glDrawBuffers(1, buffers2);
+		// Note: see above - avoid the glDrawBuffers macro (thread-local data).
+		OpenGL::get_functions()->drawBuffers(1, buffers2);
 	}
 	gc.reset_frame_buffer();
 

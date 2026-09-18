@@ -41,7 +41,10 @@ namespace clan
 /// \brief Uniform Buffer Vector
 ///
 template<typename Type>
-class CL_API_DISPLAY UniformVector : public UniformBuffer
+// Note: no CL_API_DISPLAY (like Rectx/ComPtr): fully defined in this
+// header (members using it, e.g. Scene3D's SkyboxPass uniforms, must
+// instantiate it locally); dllimport would leave nothing to import.
+class UniformVector : public UniformBuffer
 {
 /// \name Construction
 /// \{

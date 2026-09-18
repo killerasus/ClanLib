@@ -37,12 +37,12 @@ namespace clan
 
 // Explicit instantiate the versions we use:
 
-template class LineRay2x<int>;
-template class LineRay2x<float>;
-template class LineRay2x<double>;
+template class CL_TEMPLATE_EXPORT LineRay2x<int>;
+template class CL_TEMPLATE_EXPORT LineRay2x<float>;
+template class CL_TEMPLATE_EXPORT LineRay2x<double>;
 
-template class LineRay3x<int>;
-template class LineRay3x<float>;
-template class LineRay3x<double>;
+template class CL_TEMPLATE_EXPORT LineRay3x<int>;
+template class CL_TEMPLATE_EXPORT LineRay3x<float>;
+template class CL_TEMPLATE_EXPORT LineRay3x<double>;
 
 }

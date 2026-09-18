@@ -29,6 +29,7 @@
 
 #pragma once
 
+#include "../api_core.h"
 #include "vec4.h"
 #include "vec3.h"
 
@@ -41,7 +42,7 @@ class AxisAlignedBoundingBox;
 class OrientedBoundingBox;
 class FrustumPlanes;
 
-class IntersectionTest
+class CL_API_CORE IntersectionTest
 {
 public:
 	enum Result

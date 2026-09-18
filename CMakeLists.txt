@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(ClanLib VERSION 3.0.0 LANGUAGES CXX)
+project(ClanLib VERSION 3.0.0 LANGUAGES C CXX)
 
 # Platform detection
 if(WIN32 OR MSVC)
@@ -30,6 +30,7 @@ set(CLANLIB_BUILD_PHYSICS2D OFF)
 set(CLANLIB_BUILD_GAMEIDE OFF)
 set(CLANLIB_BUILD_SWRENDER OFF)
 set(CLANLIB_BUILD_COMPUTE OFF)
+set(CLANLIB_BUILD_D3D OFF)
 
 # Parse arguments to enable modules
 foreach(arg ${CMAKE_ARGV})
@@ -110,6 +111,10 @@ if(CLANLIB_BUILD_ALL)
     set(CLANLIB_BUILD_GAMEIDE ON)
     set(CLANLIB_BUILD_SWRENDER ON)
     set(CLANLIB_BUILD_COMPUTE ON)
+    # D3D is Windows-only (requires d3d11.h); Scene3D needs it on Windows.
+    if(WIN32)
+        set(CLANLIB_BUILD_D3D ON)
+    endif()
 endif()
 
 # Core is always on
@@ -150,6 +155,9 @@ if(CLANLIB_BUILD_CORE)
 endif()
 if(CLANLIB_BUILD_DISPLAY)
 	list(APPEND CLANLIB_MODULES "Display")
+endif()
+if(CLANLIB_BUILD_D3D AND WIN32)
+	list(APPEND CLANLIB_MODULES "D3D")
 endif()
 if(CLANLIB_BUILD_GL)
 	list(APPEND CLANLIB_MODULES "GL")
@@ -206,6 +214,46 @@ set(CLANLIB_VERSION_PATCH 0)
 # Generate pkg-config files for each module
 # ... will be generated per-module
 
+# Windows DLL mode: Sources/API/*/api_*.h selects dllimport/dllexport via
+# CL_API_DLL, exporting only when the matching <MODULE>_EXPORT macro is
+# defined while building that module itself (dllexport), with consumers
+# seeing dllimport. dllimport is required for cross-DLL *data* imports
+# (e.g. HalfFloat tables); plain/empty views cannot link data (LNK2019).
+# Template classes that are fully defined in headers (Rectx, ComPtr,
+# signals) carry no CL_API macro at all, since MSVC rejects dllimport
+# member definitions (C2491) and they need no exporting.
+if(WIN32)
+    add_compile_definitions(CL_API_DLL)
+endif()
+
+# MSVC: neutralize legacy autotools `#pragma comment(lib, "clan*-*.lib")`
+# auto-link directives in Sources/API/*.h. MSVC auto-defines _DLL with /MD
+# (CMake default), which makes those headers request e.g.
+# clanCore-static-mtdll.lib -- a file the CMake build never produces
+# (LNK1104). Our targets link explicitly via target_link_libraries, so
+# ignore every legacy auto-link library name here.
+# NOTE: this MUST come before add_subdirectory below: add_link_options only
+# affects targets created after the call.
+if(MSVC)
+    set(CLANLIB_LEGACY_AUTOLINK_LIBS
+        Core App Display GL Sound Database Sqlite Network GUI CSSLayout
+        Scene3D Physics3D Physics2D GameIDE SWRender Compute D3D MySQL GL1)
+    foreach(_clanlib ${CLANLIB_LEGACY_AUTOLINK_LIBS})
+        foreach(_variant
+            "-dll.lib" "-static-mtdll.lib" "-static-mt.lib"
+            "-dll-debug.lib" "-static-mtdll-debug.lib" "-static-mt-debug.lib")
+            add_link_options(/NODEFAULTLIB:"clan${_clanlib}${_variant}")
+        endforeach()
+    endforeach()
+    # gui.h also auto-links clanCSSLayout under the same variants (covered
+    # above via CSSLayout) and the "CSSLayout" prefix variant:
+    foreach(_variant
+        "-dll.lib" "-static-mtdll.lib" "-static-mt.lib"
+        "-dll-debug.lib" "-static-mtdll-debug.lib" "-static-mt-debug.lib")
+        add_link_options(/NODEFAULTLIB:"clanCSSLayout${_variant}")
+    endforeach()
+endif()
+
 # Add subdirectories for each module
 foreach(module ${CLANLIB_MODULES})
     if(EXISTS "${CMAKE_SOURCE_DIR}/Sources/${module}/CMakeLists.txt")
@@ -214,6 +262,40 @@ foreach(module ${CLANLIB_MODULES})
         message(WARNING "CMakeLists.txt not found for module: ${module}")
     endif()
 endforeach()
+
+# Per-module export macros for the Windows DLL build: the module being
+# built sees its own classes as dllexport (and therefore produces an
+# import library for dependents); everyone else sees dllimport.
+if(WIN32)
+    set(CLANLIB_EXPORT_MAP
+        "App:APP_EXPORT"
+        "Core:CORE_EXPORT"
+        "Display:DISPLAY_EXPORT"
+        "D3D:D3D_EXPORT"
+        "GL:GL_EXPORT"
+        "Sound:SOUND_EXPORT"
+        "Database:DATABASE_EXPORT"
+        "Sqlite:SQLITE_EXPORT"
+        "Network:NETWORK_EXPORT"
+        "GUI:GUI_EXPORT"
+        "CSSLayout:CSSLAYOUT_EXPORT"
+        "Scene3D:SCENE_EXPORT"
+        "Physics3D:SCENE_EXPORT"
+        "Physics2D:PHYSIC_EXPORT"
+        "SWRender:SWRender_EXPORT"
+        "Compute:CL_COMPUTE_EXPORT"
+    )
+    foreach(pair ${CLANLIB_EXPORT_MAP})
+        string(REPLACE ":" ";" pair_list "${pair}")
+        list(GET pair_list 0 _mod)
+        list(GET pair_list 1 _def)
+        if(TARGET clan30${_mod})
+            target_compile_definitions(clan30${_mod} PRIVATE ${_def})
+        endif()
+    endforeach()
+endif()
+
+
 
 # Setup documentation option
 option(CLANLIB_BUILD_DOCS "Build API documentation" OFF)

@@ -39,14 +39,17 @@ namespace clan
 /// \{
 
 /// (Internal ClanLib Class)
-class CL_API_CORE SlotCallback_v0 : public SlotCallback
+// Note: no CL_API_CORE (like Rectx/ComPtr): fully defined in this header,
+// other DLLs must use it locally; dllimport would leave nothing to import
+// since no .cpp implements these.
+class SlotCallback_v0 : public SlotCallback
 {
 public:
 	virtual void invoke() = 0;
 };
 
 /// (Internal ClanLib Class)
-class CL_API_CORE SlotCallback_v0_static : public SlotCallback_v0
+class SlotCallback_v0_static : public SlotCallback_v0
 {
 public:
 	SlotCallback_v0_static(void (*static_func)())
@@ -104,7 +107,7 @@ public:
 };
 
 /// \brief Signal_v0
-class CL_API_CORE Signal_v0
+class Signal_v0
 {
 /// \name Construction
 /// \{

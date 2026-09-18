@@ -96,12 +96,12 @@ Vec3<Type> Line3x<Type>::get_intersection( const Line3x<Type> &second, bool &int
 
 // Explicit instantiate the versions we use:
 
-template class Line2x<int>;
-template class Line2x<float>;
-template class Line2x<double>;
+template class CL_TEMPLATE_EXPORT Line2x<int>;
+template class CL_TEMPLATE_EXPORT Line2x<float>;
+template class CL_TEMPLATE_EXPORT Line2x<double>;
 
-template class Line3x<int>;
-template class Line3x<float>;
-template class Line3x<double>;
+template class CL_TEMPLATE_EXPORT Line3x<int>;
+template class CL_TEMPLATE_EXPORT Line3x<float>;
+template class CL_TEMPLATE_EXPORT Line3x<double>;
 
 }

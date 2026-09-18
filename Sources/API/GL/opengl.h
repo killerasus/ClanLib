@@ -61,63 +61,77 @@ typedef struct
 } TextureFormat_GL;
 
 /// \brief OpenGL utility class.
-class CL_API_GL OpenGL
+// Note: intentionally no CL_API_GL here. The 'functions' member below is
+// thread-local storage, which MSVC forbids from having a dll interface
+// (C2492). Nothing outside clanGL references this class (verified), so no
+// DLL export is needed.
+class OpenGL
 {
 /// \name Attributes
 /// \{
 
 public:
 	/// \brief Get OpenGL extension specific function address.
-	static ProcAddress *get_proc_address(const std::string &function_name);
+	static CL_API_GL ProcAddress *get_proc_address(const std::string &function_name);
 
 	/// \brief Function table for OpenGL 2.0.
+	// Note: no dll interface here (see class comment): thread-local
+	// storage may not be imported/exported (C2492). Each DLL using OpenGL
+	// works through the static functions below; the table itself lives
+	// privately in clanGL.
 	static cl_tls_variable GLFunctions *functions;
 
+	/// \brief Returns the calling thread's OpenGL function table.
+	///
+	/// Other modules must use this instead of touching OpenGL::functions
+	/// directly: thread-local data cannot cross DLL boundaries on Windows.
+	static CL_API_GL GLFunctions *get_functions();
+
 	/// \brief Returns the opengl texture format
-	static TextureFormat_GL get_textureformat(TextureFormat format);
+	static CL_API_GL TextureFormat_GL get_textureformat(TextureFormat format);
 
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
-	static void set_active(GraphicContext &gc);
+	static CL_API_GL void set_active(GraphicContext &gc);
 
 	/// \brief Sets the thread's OpenGL context to the one used by the graphic context.
-	static void set_active(const OpenGLGraphicContextProvider * const gc_provider);
+	static CL_API_GL void set_active(const OpenGLGraphicContextProvider * const gc_provider);
 
 	/// \brief Sets the thread's OpenGL context to the first valid allocated one
 	///
 	/// If a valid OpenGL context is not found, then "no render context" is set.
 	///
 	/// \return true = Success. false = No OpenGL contexts could be found
-	static bool set_active();
+	static CL_API_GL bool set_active();
 
 	/// \brief Throw an exception if an OpenGL error was detected ( Using glGetError() )
 	///
 	/// Remember to call glGetError() to clear any previous errors
-	static void check_error();
+	static CL_API_GL void check_error();
 
 	/// \brief Returns the OpenGL texture handle
-	static GLuint get_texture_handle(Texture &texture);
+	static CL_API_GL GLuint get_texture_handle(Texture &texture);
 
 	/// \brief Creates a texture object from an OpenGL texture handle
 	///
 	/// The returned object takes ownership of the texture handle (it calls glDeleteTextures when destroyed)
-	static Texture from_texture_handle(GLuint type, GLuint handle);
+	static CL_API_GL Texture from_texture_handle(GLuint type, GLuint handle);
 
-	static GLenum to_enum(DrawBuffer buf);
-	static GLenum to_enum(CompareFunction func);
-	static GLenum to_enum(StencilOp op);
-	static GLenum to_enum(CullMode mode);
-	static GLenum to_enum(FillMode mode);
-	static GLenum to_enum(BlendFunc func);
-	static GLenum to_enum(BlendEquation eq);
-	static GLenum to_enum(VertexAttributeDataType value);
-	static GLenum to_enum(PrimitivesType value);
-	static GLenum to_enum(LogicOp op);
-	static GLenum to_enum(TextureFilter filter);
-	static GLenum to_enum(TextureWrapMode mode);
-	static GLenum to_enum(TextureCompareMode mode);
-	static GLenum to_cube_target(int index);
-	static GLenum to_enum(BufferUsage usage);
-	static GLenum to_enum(BufferAccess access);
+	static CL_API_GL GLenum to_enum(DrawBuffer buf);
+	static CL_API_GL GLenum to_enum(CompareFunction func);
+	static CL_API_GL GLenum to_enum(StencilOp op);
+	static CL_API_GL GLenum to_enum(CullMode mode);
+	static CL_API_GL GLenum to_enum(FillMode mode);
+	static CL_API_GL GLenum to_enum(BlendFunc func);
+	static CL_API_GL GLenum to_enum(BlendEquation eq);
+	static CL_API_GL GLenum to_enum(VertexAttributeDataType value);
+	static CL_API_GL GLenum to_enum(PrimitivesType value);
+	static CL_API_GL GLenum to_enum(LogicOp op);
+	static CL_API_GL GLenum to_enum(TextureFilter filter);
+	static CL_API_GL GLenum to_enum(TextureWrapMode mode);
+	static CL_API_GL GLenum to_enum(TextureCompareMode mode);
+	static CL_API_GL GLenum to_cube_target(int index);
+	static CL_API_GL GLenum to_enum(BufferUsage usage);
+	static CL_API_GL GLenum to_enum(BufferAccess access);
 
 /// \}
 
@@ -125,7 +139,7 @@ private:
 	/// \brief Remove the opengl bindings from the thread's OpenGL context
 	/// 
 	/// This should only be called by the OpenGLGraphicContextProvider destructor
-	static void remove_active(const OpenGLGraphicContextProvider * const gc_provider);
+	static CL_API_GL void remove_active(const OpenGLGraphicContextProvider * const gc_provider);
 
 	friend class GL1GraphicContextProvider;
 	friend class GL3GraphicContextProvider;

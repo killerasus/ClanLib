@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "API/D3D/api_d3d.h"
 #include "API/Display/TargetProviders/texture_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
 #include "d3d_share_list.h"
@@ -37,7 +38,9 @@
 namespace clan
 {
 
-class D3DTextureProvider : public TextureProvider, D3DSharedResource
+// Note: exported (unlike most D3D provider classes) because clanCompute
+// uses D3DTextureProvider::get_texture_2d for OpenCL sharing.
+class CL_API_D3D D3DTextureProvider : public TextureProvider, D3DSharedResource
 {
 /// \name Construction
 /// \{

@@ -55,7 +55,10 @@ namespace clan
 ///    connect_signal() for each function you want hooked up.</p>
 ///    <p>See the login_view.cpp/h in the CTalk example for an example of how to use
 ///    this class.</p>
-class CL_API_CORE SlotContainer
+// Note: no CL_API_CORE (like Rectx/ComPtr): fully defined in this header,
+// other DLLs must use it locally; dllimport would leave nothing to import
+// since no .cpp implements these.
+class SlotContainer
 {
 /// \name Operations
 /// \{

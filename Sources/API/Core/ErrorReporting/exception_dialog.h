@@ -29,6 +29,7 @@
 
 #pragma once
 
+#include "../api_core.h"
 #include <memory>
 
 namespace clan
@@ -40,7 +41,7 @@ class Exception;
 class ExceptionDialog_Impl;
 
 /// \brief Displays a modal dialog with exception details.
-class ExceptionDialog
+class CL_API_CORE ExceptionDialog
 {
 /// \name Operations
 /// \{

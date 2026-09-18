@@ -31,6 +31,8 @@
 
 
 #ifdef WIN32
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
 #ifdef _MSC_VER
 # pragma warning (disable:4786)
 #endif

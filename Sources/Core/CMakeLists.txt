@@ -2,6 +2,7 @@
 
 add_library(clan30Core SHARED)
 
+# Full source list mirrors Sources/Core/Makefile.am (autotools build).
 set(CORE_SOURCES
     Text/console_logger.cpp
     Text/utf8_reader.cpp
@@ -24,19 +25,35 @@ set(CORE_SOURCES
     Crypto/aes192_encrypt_impl.cpp
     Crypto/asn1.cpp
     Crypto/sha512_256.cpp
+    Crypto/tls_client_impl.cpp
     Crypto/sha.cpp
     Crypto/sha1_impl.cpp
-    Crypto/aes192_encrypt_impl.cpp
+    Crypto/aes256_encrypt_impl.cpp
     Crypto/md5_impl.cpp
     Crypto/secret.cpp
     Crypto/sha256.cpp
+    Crypto/rsa.cpp
     Crypto/aes128_encrypt.cpp
     Crypto/sha512_224.cpp
     Crypto/sha1.cpp
     Crypto/sha224.cpp
+    Crypto/aes128_decrypt_impl.cpp
+    Crypto/sha512_impl.cpp
     Crypto/aes256_encrypt.cpp
     Crypto/aes256_decrypt_impl.cpp
-    Crypto/sha512_impl.cpp
+    Crypto/md5.cpp
+    Crypto/hash_functions.cpp
+    Crypto/rsa_impl.cpp
+    Crypto/aes_impl.cpp
+    Crypto/aes192_decrypt.cpp
+    Crypto/aes192_decrypt_impl.cpp
+    Crypto/sha384.cpp
+    Crypto/secret_impl.cpp
+    Crypto/tls_client.cpp
+    Crypto/aes128_encrypt_impl.cpp
+    Crypto/random_impl.cpp
+    Crypto/sha512.cpp
+    Crypto/sha256_impl.cpp
     Crypto/aes256_decrypt.cpp
     Crypto/x509.cpp
     precomp.cpp
@@ -47,6 +64,7 @@ set(CORE_SOURCES
     IOData/pipe_listen.cpp
     IOData/file_help.cpp
     IOData/html_url.cpp
+    IOData/directory_listing.cpp
     IOData/file_system.cpp
     IOData/directory.cpp
     IOData/file_system_provider_file.cpp
@@ -58,8 +76,82 @@ set(CORE_SOURCES
     IOData/iodevice.cpp
     IOData/file.cpp
     IOData/iodevice_provider_pipe_connection.cpp
-    JSON/json_value.cpp
-    System/datetime.cpp
+    IOData/path_help.cpp
+    XML/dom_processing_instruction.cpp
+    XML/dom_exception.cpp
+    XML/xpath_exception.cpp
+    XML/dom_document_fragment.cpp
+    XML/xml_writer.cpp
+    XML/dom_element.cpp
+    XML/xml_tokenizer.cpp
+    XML/dom_cdata_section.cpp
+    XML/dom_notation.cpp
+    XML/dom_node_list.cpp
+    XML/xpath_evaluator.cpp
+    XML/dom_attr.cpp
+    XML/dom_entity_reference.cpp
+    XML/xpath_evaluator_impl.cpp
+    XML/dom_node.cpp
+    XML/dom_document_type.cpp
+    XML/xpath_object.cpp
+    XML/dom_document.cpp
+    XML/dom_character_data.cpp
+    XML/dom_implementation.cpp
+    XML/dom_entity.cpp
+    XML/dom_text.cpp
+    XML/dom_document_generic.cpp
+    XML/dom_comment.cpp
+    XML/dom_named_node_map.cpp
+    Zip/zip_iodevice_fileentry.cpp
+    Zip/zip_file_header.cpp
+    Zip/zip_64_end_of_central_directory_locator.cpp
+    Zip/zip_file_entry.cpp
+    Zip/zip_writer.cpp
+    Zip/zip_end_of_central_directory_record.cpp
+    Zip/zip_local_file_header.cpp
+    Zip/zip_64_end_of_central_directory_record.cpp
+    Zip/zip_digital_signature.cpp
+    Zip/zlib_compression.cpp
+    Zip/zip_reader.cpp
+    Zip/zip_local_file_descriptor.cpp
+    Zip/zip_archive.cpp
+    Math/mat3.cpp
+    Math/intersection_test.cpp
+    Math/line.cpp
+    Math/rect_packer_impl.cpp
+    Math/angle.cpp
+    Math/triangle_math.cpp
+    Math/big_int_impl.cpp
+    Math/base64_decoder.cpp
+    Math/bezier_curve_impl.cpp
+    Math/mat2.cpp
+    Math/line_ray.cpp
+    Math/ear_clip_triangulator_impl.cpp
+    Math/ear_clip_triangulator.cpp
+    Math/origin.cpp
+    Math/rect.cpp
+    Math/vec4.cpp
+    Math/quad.cpp
+    Math/outline_triangulator_generic.cpp
+    Math/bezier_curve.cpp
+    Math/delauney_triangulator.cpp
+    Math/half_float.cpp
+    Math/ear_clip_result.cpp
+    Math/base64_encoder.cpp
+    Math/delauney_triangulator_generic.cpp
+    Math/big_int.cpp
+    Math/frustum_planes.cpp
+    Math/line_segment.cpp
+    Math/line_math.cpp
+    Math/quaternion.cpp
+    Math/pointset_math.cpp
+    Math/mat4.cpp
+    Math/vec2.cpp
+    Math/outline_triangulator.cpp
+    Math/rect_packer.cpp
+    Math/vec3.cpp
+    core_global.cpp
+    core_iostream.cpp
     System/runnable.cpp
     System/setup_core.cpp
     System/service_impl.cpp
@@ -83,6 +175,8 @@ set(CORE_SOURCES
     System/service.cpp
     System/thread_local_storage_impl.cpp
     System/work_queue.cpp
+    JSON/json_value.cpp
+    System/datetime.cpp
 )
 
 if(WIN32)
@@ -108,14 +202,24 @@ target_sources(clan30Core PRIVATE ${CORE_SOURCES})
 # Platform-specific defines and flags
 if(WIN32)
     target_compile_definitions(clan30Core PRIVATE -DWIN32 -DUNICODE)
-    target_link_libraries(clan30Core PRIVATE
-        -lz
-        -lmsvcrt
-        -lshell32
-        -lshlwapi
-        -limagehlp
-        -lmingwex
-    )
+    # MSVC: use library names without -l prefix; MinGW: use -l prefix
+    if(MSVC)
+        target_link_libraries(clan30Core PRIVATE
+            shell32
+            shlwapi
+            imagehlp
+        )
+        # C runtime is automatically linked in MSVC, no -lmsvcrt needed
+        # zlib would need to be found separately if used
+    else()
+        # MinGW / Linux
+        find_package(Threads REQUIRED)
+        target_link_libraries(clan30Core PRIVATE Threads::Threads)
+        target_link_libraries(clan30Core PRIVATE
+            -lz
+            -lmingwex
+        )
+    endif()
 else()
     # Linux - pthread
     find_package(Threads REQUIRED)

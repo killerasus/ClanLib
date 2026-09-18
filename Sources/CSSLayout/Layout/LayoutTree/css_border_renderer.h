@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "API/CSSLayout/api_csslayout.h"
 #include "API/CSSLayout/ComputedValues/css_computed_border.h"
 #include "css_used_value.h"
 
@@ -38,7 +39,7 @@ class CSSLayoutGraphics;
 class CSSResourceCache;
 class CSSBoxElement;
 
-class CSSBorderRenderer
+class CL_API_CSSLAYOUT CSSBorderRenderer
 {
 public:
 	CSSBorderRenderer(CSSLayoutGraphics *graphics, CSSResourceCache *resource_cache, const CSSComputedBorder &computed_properties);

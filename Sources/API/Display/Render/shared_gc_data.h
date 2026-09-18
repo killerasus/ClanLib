@@ -49,7 +49,7 @@ class SharedGCData_Impl;
 class MutexSection;
 
 /// \brief Shared Graphic Context Data
-class SharedGCData
+class CL_API_DISPLAY SharedGCData
 {
 public:
 

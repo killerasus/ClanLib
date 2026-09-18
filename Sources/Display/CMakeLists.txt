@@ -26,6 +26,7 @@ set(DISPLAY_SOURCES
     Render/texture_2d.cpp
     Render/graphic_context_impl.cpp
     Render/texture_cube_array.cpp
+    Render/texture_cube.cpp
     Render/primitives_array.cpp
     Render/uniform_buffer.cpp
     Render/depth_stencil_state.cpp
@@ -48,6 +49,8 @@ set(DISPLAY_SOURCES
     2D/image.cpp
     2D/canvas_batcher.cpp
     2D/shape2d_impl.cpp
+    2D/canvas_impl.cpp
+    2D/texture_group_impl.cpp
     2D/canvas.cpp
     2D/color_hsv.cpp
     2D/span_layout.cpp
@@ -73,6 +76,7 @@ set(DISPLAY_SOURCES
     Resources/display_cache.cpp
     Collision/collision_outline_generic.cpp
     Collision/outline_provider_bitmap.cpp
+    Collision/collision_outline.cpp
     Collision/outline_provider_file_generic.cpp
     Collision/outline_provider_file.cpp
     Collision/contour.cpp
@@ -99,12 +103,19 @@ set(DISPLAY_SOURCES
     Window/input_device.cpp
     ImageProviders/targa_provider.cpp
     ImageProviders/PNGLoader/png_loader.cpp
+    ImageProviders/provider_type.cpp
     ImageProviders/JPEGLoader/jpeg_huffman_decoder.cpp
     ImageProviders/JPEGLoader/jpeg_mcu_decoder.cpp
     ImageProviders/JPEGLoader/jpeg_loader.cpp
+    ImageProviders/JPEGLoader/jpeg_rgb_decoder.cpp
+    ImageProviders/JPEGLoader/jpeg_bit_reader.cpp
+    ImageProviders/JPEGLoader/jpeg_file_reader.cpp
+    ImageProviders/TargaLoader/targa_loader.cpp
+    ImageProviders/jpeg_provider.cpp
+    ImageProviders/png_output_description.cpp
+    ImageProviders/png_provider.cpp
+    ImageProviders/provider_factory.cpp
     ImageProviders/JPEGWriter/jpge.cpp
-    ImageProviders/provider_type.cpp
-    
     ImageProviders/dds_provider.cpp
     display_target_impl.cpp
     display.cpp
@@ -120,6 +131,7 @@ if(WIN32)
         Win32/input_device_provider_win32hid.cpp
         Win32/hid.cpp
         Win32/input_device_provider_win32mouse.cpp
+        Win32/cursor_provider_win32.cpp
         Win32/input_device_provider_win32keyboard.cpp
         Win32/dwm_functions.cpp
     )
@@ -151,14 +163,36 @@ target_sources(clan30Display PRIVATE ${DISPLAY_SOURCES})
 # Platform-specific defines and flags
 if(WIN32)
     target_compile_definitions(clan30Display PRIVATE -DWIN32 -DUNICODE)
-    target_link_libraries(clan30Display PRIVATE
-        -lwinmm
-        -lddraw
-        -ldinput8
-        -ldxguid
-        -lgdi32
-        -lole32
-    )
+    if(MSVC)
+        # MSVC: use library names without -l prefix
+        target_link_libraries(clan30Display PRIVATE
+            winmm
+            ddraw
+            dinput8
+            dxguid
+            gdi32
+            ole32
+            clan30Core
+        )
+    else()
+        # MinGW / Linux
+        target_compile_definitions(clan30Display PRIVATE -DHAVE_POSIX)
+        # Link X11, Xrender, pthread
+        find_package(X11 REQUIRED)
+        find_package(Xrender REQUIRED)
+        find_package(Threads REQUIRED)
+        target_link_libraries(clan30Display PRIVATE
+            X11::X11
+            Xrender::Xrender
+            Threads::Threads
+            -lwinmm
+            -lddraw
+            -ldinput8
+            -ldxguid
+            -lgdi32
+            -lole32
+        )
+    endif()
 else()
     target_compile_definitions(clan30Display PRIVATE -DHAVE_POSIX)
     # Link X11, Xrender, pthread
@@ -176,6 +210,7 @@ endif()
 target_include_directories(clan30Display PRIVATE
     "${CMAKE_SOURCE_DIR}/Sources/API"
     "${CMAKE_SOURCE_DIR}/Sources/Display"
+    "${CMAKE_SOURCE_DIR}/Sources"
 )
 
 # Version information

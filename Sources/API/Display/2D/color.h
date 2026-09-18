@@ -658,7 +658,7 @@ public:
 };
 
 /// \brief Floating point color description class (for float).
-class Colorf : public Vec4f
+class CL_API_DISPLAY Colorf : public Vec4f
 {
 /// \name Construction
 /// \{

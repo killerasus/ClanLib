@@ -53,8 +53,11 @@ CL_API_CORE std::ostream& operator<<(std::ostream& s, const Pointd& point);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const Size& size);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const Sizef& size);
 
+// Note: no CL_API_CORE on these template overloads (like Rectx/ComPtr):
+// fully defined here, other DLLs instantiate locally; dllimport would be
+// rejected (C2491) with nothing to import.
 template<typename T>
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec2<T>& vec)
+std::ostream& operator<<(std::ostream& s, const Vec2<T>& vec)
 {
 	s << "["
 	  << vec.x   << ", "
@@ -63,7 +66,7 @@ CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec2<T>& vec)
 }
 
 template<typename T>
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec3<T>& vec)
+std::ostream& operator<<(std::ostream& s, const Vec3<T>& vec)
 {
 	s << "["
 	  << vec.x << ", "
@@ -73,7 +76,7 @@ CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec3<T>& vec)
 }
 
 template<typename T>
-CL_API_CORE std::ostream& operator<<(std::ostream& s, const Vec4<T>& vec)
+std::ostream& operator<<(std::ostream& s, const Vec4<T>& vec)
 {
 	s << "["
 	  << vec.x << ", "

@@ -49,7 +49,7 @@ namespace clan
 /////////////////////////////////////////////////////////////////////////////
 // Mat4 operations: That needs to be listed first because GCC is not very flexible handling templates
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 Mat4<float> Mat4<float>::operator *(const Mat4<float> &mult) const
 {
 #if !defined DISABLE_SSE2 && !defined __MINGW32__ //MinGW's version is flawed.
@@ -196,7 +196,7 @@ Mat4<Type> Mat4<Type>::perspective(
 }
 
 // For floats
-template<>
+template<> CL_TEMPLATE_EXPORT
 Mat4f Mat4f::perspective(
 	float field_of_view_y_degrees,
 	float aspect,
@@ -427,14 +427,14 @@ Vec3<Type> Mat4<Type>::get_transformed_point(const Vec3<Type> &vector) const
 }
 
 // For ints
-template<>
+template<> CL_TEMPLATE_EXPORT
 Vec3<int> Mat4<int>::get_euler(EulerOrder order) const
 {
 	throw Exception("Function not supported for ints");
 }
 
 // For ints
-template<>
+template<> CL_TEMPLATE_EXPORT
 Mat4<int> Mat4<int>::rotate(const Angle &angle, int x, int y, int z, bool normalize)
 {
 	if (normalize)
@@ -533,7 +533,7 @@ Mat4<Type> Mat4<Type>::look_at(
 }
 
 // For floats
-template<>
+template<> CL_TEMPLATE_EXPORT
 Mat4f Mat4f::look_at(
 	float eye_x, float eye_y, float eye_z,
 	float center_x, float center_y, float center_z,
@@ -662,7 +662,7 @@ Mat4<Type> &Mat4<Type>::scale_self(Type x, Type y, Type z)
 	return *this;
 }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 Mat4<float> &Mat4<float>::scale_self(float x, float y, float z)
 {
 	/*
@@ -716,7 +716,7 @@ Mat4<Type> &Mat4<Type>::translate_self(Type x, Type y, Type z)
 	return *this;
 }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 Mat4<float> &Mat4<float>::translate_self(float x, float y, float z)
 {
 	/*
@@ -1006,7 +1006,7 @@ void Mat4<Type>::decompose(Vec3<Type> &out_position, Quaternionx<Type> &out_orie
 	out_position = Vec3<Type>(matrix[12], matrix[13], matrix[14]);
 }
 
-template<>
+template<> CL_TEMPLATE_EXPORT
 void Mat4<int>::decompose(Vec3<int> &out_position, Quaternionx<int> &out_orientation, Vec3<int> &out_scale) const
 {
 	throw Exception("Mat4::decompose not implemented for Mat4i");
@@ -1016,8 +1016,8 @@ void Mat4<int>::decompose(Vec3<int> &out_position, Quaternionx<int> &out_orienta
 // Mat4 implementation:
 
 // Explicit instantiate the versions we use:
-template class Mat4<int>;
-template class Mat4<float>;
-template class Mat4<double>;
+template class CL_TEMPLATE_EXPORT Mat4<int>;
+template class CL_TEMPLATE_EXPORT Mat4<float>;
+template class CL_TEMPLATE_EXPORT Mat4<double>;
 
 }

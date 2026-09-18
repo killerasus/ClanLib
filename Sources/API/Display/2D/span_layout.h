@@ -30,6 +30,7 @@
 #pragma once
 
 #include <memory>
+#include "../api_display.h"
 #include "../../Core/Math/rect.h"
 #include "../../Core/Math/size.h"
 #include "color.h"
@@ -58,7 +59,7 @@ enum SpanAlign
 };
 
 /// \brief Span layout class
-class SpanLayout
+class CL_API_DISPLAY SpanLayout
 {
 /// \name Construction
 /// \{

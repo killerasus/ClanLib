@@ -54,7 +54,7 @@ Vec2<Type> LineSegment2x<Type>::normal() const
 }
 
 // For integers
-template<>
+template<> CL_TEMPLATE_EXPORT
 Vec2i LineSegment2x<int>::normal() const
 {
 	LineSegment2f line( Vec2f( (float) p.x, (float) p.y), Vec2f( (float) q.x, (float) q.y) );
@@ -224,7 +224,7 @@ Type LineSegment2x<Type>::point_distance(const Vec2<Type> &point)
 }
 
 // For integers
-template<>
+template<> CL_TEMPLATE_EXPORT
 int LineSegment2x<int>::point_distance(const Vec2i &point)
 {
 	int L = pow2(q.x-p.x) + pow2(q.y-p.y);
@@ -282,7 +282,7 @@ Type LineSegment3x<Type>::point_distance(const Vec3<Type> &point, Vec3<Type> &de
 }
 
 // For integers
-template<>
+template<> CL_TEMPLATE_EXPORT
 int LineSegment3x<int>::point_distance(const Vec3i &point, Vec3i &dest_intercept) const
 {
 	Vec3i ap(point.x - p.x, point.y - p.y, point.z - p.z );
@@ -405,12 +405,12 @@ LineSegment2x<Type> &LineSegment2x<Type>::clip(const Rectx<Type> &rect, bool &cl
 
 // Explicit instantiate the versions we use:
 
-template class LineSegment2x<int>;
-template class LineSegment2x<float>;
-template class LineSegment2x<double>;
+template class CL_TEMPLATE_EXPORT LineSegment2x<int>;
+template class CL_TEMPLATE_EXPORT LineSegment2x<float>;
+template class CL_TEMPLATE_EXPORT LineSegment2x<double>;
 
-template class LineSegment3x<int>;
-template class LineSegment3x<float>;
-template class LineSegment3x<double>;
+template class CL_TEMPLATE_EXPORT LineSegment3x<int>;
+template class CL_TEMPLATE_EXPORT LineSegment3x<float>;
+template class CL_TEMPLATE_EXPORT LineSegment3x<double>;
 
 }

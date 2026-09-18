@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "API/CSSLayout/api_csslayout.h"
 #include <map>
 #include "API/Display/Font/font.h"
 #include "API/Display/2D/image.h"
@@ -49,7 +50,7 @@ class CSSInlineLayout;
 class CSSLayoutCursor;
 class CSSBlockFormattingContext;
 
-class CSSResourceCache
+class CL_API_CSSLAYOUT CSSResourceCache
 {
 public:
 	CSSResourceCache();

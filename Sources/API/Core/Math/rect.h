@@ -48,8 +48,12 @@ namespace clan
 ///
 /// These line templates are defined for: int (Rect), float (Rectf), double (Rectd)
 ///
+// Note: intentionally no CL_API_CORE here. Rectx is fully defined in this
+// header; decorating it with dllimport would make MSVC reject these
+// out-of-line template member definitions (C2491) in every consuming TU.
+// Each TU instantiates what it uses locally, so no DLL export is needed.
 template<typename Type>
-class CL_API_CORE Rectx
+class Rectx
 {
 /// \name Construction
 /// \{

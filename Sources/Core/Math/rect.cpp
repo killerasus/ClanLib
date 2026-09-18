@@ -78,8 +78,8 @@ Rectx<Type> Rectx<Type>::get_rot_bounds(Origin origin, Type x, Type y, const Ang
 
 // Explicit instantiate the versions we use:
 
-template class Rectx<int>;
-template class Rectx<float>;
-template class Rectx<double>;
+template class CL_TEMPLATE_EXPORT Rectx<int>;
+template class CL_TEMPLATE_EXPORT Rectx<float>;
+template class CL_TEMPLATE_EXPORT Rectx<double>;
 
 }

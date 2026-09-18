@@ -355,7 +355,7 @@ Vec4<Type> Quaternionx<Type>::rotate_vector(const Vec4<Type> &v) const
 
 // Explicit instantiate the versions we use:
 
-template class Quaternionx<float>;
-template class Quaternionx<double>;
+template class CL_TEMPLATE_EXPORT Quaternionx<float>;
+template class CL_TEMPLATE_EXPORT Quaternionx<double>;
 
 }

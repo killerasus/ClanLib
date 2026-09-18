@@ -28,13 +28,16 @@
 
 #pragma once
 
+#include "API/D3D/api_d3d.h"
 #include "API/Display/TargetProviders/render_buffer_provider.h"
 #include "API/Display/Image/pixel_buffer.h"
 
 namespace clan
 {
 
-class D3DRenderBufferProvider : public RenderBufferProvider
+// Note: exported (unlike most D3D provider classes) because clanCompute
+// uses D3DRenderBufferProvider::get_texture for OpenCL sharing.
+class CL_API_D3D D3DRenderBufferProvider : public RenderBufferProvider
 {
 /// \name Construction
 /// \{

@@ -33,6 +33,7 @@
 #ifdef _MSC_VER
 # pragma warning (disable:4786)
 #endif
+#define NOMINMAX 
 #include <windows.h>
 #include <cstdlib>
 #else
@@ -40,6 +41,18 @@
 #endif
 
 #include "API/Core/System/exception.h"
+
+// Export explicit template instantiations from the Core DLL on Windows.
+// Classes like Vec3/Quaternionx carry no CL_API macro (they are visible
+// from headers), but several of their members are defined in
+// Sources/Core/Math/*.cpp with explicit instantiation (e.g.
+// Vec3<float>::distance used by clanSound). Without dllexport on those
+// instantiations, other DLLs cannot link them.
+#if defined(_WIN32) && defined(CL_API_DLL) && defined(CORE_EXPORT)
+#define CL_TEMPLATE_EXPORT __declspec(dllexport)
+#else
+#define CL_TEMPLATE_EXPORT
+#endif
 
 #ifdef __BORLANDC__
 #define BAD_MATH

@@ -28,6 +28,7 @@
 
 #pragma once
 
+#include "API/Display/api_display.h"
 #include "API/Display/TargetProviders/graphic_context_provider.h"
 #include "API/Display/Font/font.h"
 #include "API/Core/Math/mat4.h"
@@ -37,7 +38,7 @@
 namespace clan
 {
 
-class GraphicContext_Impl : GraphicContext_State
+class CL_API_DISPLAY GraphicContext_Impl : GraphicContext_State
 {
 public:
 	GraphicContext_Impl(GraphicContextProvider *provider);

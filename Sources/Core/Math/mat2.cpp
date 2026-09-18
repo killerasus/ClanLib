@@ -163,8 +163,8 @@ Mat2<Type> Mat2<Type>::operator -(const Mat2<Type> &subtract_matrix) const
 // Mat2 implementation:
 
 // Explicit instantiate the versions we use:
-template class Mat2<int>;
-template class Mat2<float>;
-template class Mat2<double>;
+template class CL_TEMPLATE_EXPORT Mat2<int>;
+template class CL_TEMPLATE_EXPORT Mat2<float>;
+template class CL_TEMPLATE_EXPORT Mat2<double>;
 
 }

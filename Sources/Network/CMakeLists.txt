@@ -54,18 +54,31 @@ target_sources(clan30Network PRIVATE ${NETWORK_SOURCES})
 # Platform-specific defines and flags
 if(WIN32)
     target_compile_definitions(clan30Network PRIVATE -DWIN32 -DUNICODE)
-    target_link_libraries(clan30Network PRIVATE -lws2_32)
+    if(MSVC)
+        # MSVC: use library names without -l prefix (dns_resolver.cpp needs
+        # GetNetworkParams from iphlpapi)
+        target_link_libraries(clan30Network PRIVATE WS2_32 iphlpapi clan30Core)
+    else()
+        # MinGW / Linux
+        target_compile_definitions(clan30Network PRIVATE -DHAVE_POSIX)
+        # pthread for Linux
+        find_package(Threads REQUIRED)
+        target_link_libraries(clan30Network PRIVATE Threads::Threads)
+        target_link_libraries(clan30Network PRIVATE -lws2_32 -liphlpapi clan30Core)
+    endif()
 else()
     target_compile_definitions(clan30Network PRIVATE -DHAVE_POSIX)
     # pthread for Linux
     find_package(Threads REQUIRED)
     target_link_libraries(clan30Network PRIVATE Threads::Threads)
+    target_link_libraries(clan30Network PRIVATE clan30Core)
 endif()
 
 # Include directories
 target_include_directories(clan30Network PRIVATE
     "${CMAKE_SOURCE_DIR}/Sources/API"
     "${CMAKE_SOURCE_DIR}/Sources/Network"
+    "${CMAKE_SOURCE_DIR}/Sources"
 )
 
 # Version information

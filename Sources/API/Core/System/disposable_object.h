@@ -34,7 +34,7 @@ namespace clan
 {
 
 /// \brief DisposableObject
-class DisposableObject
+class CL_API_CORE DisposableObject
 {
 public:
 	DisposableObject();

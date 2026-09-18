@@ -20,7 +20,11 @@ set(SOUND_SOURCES
     Resources/sound_cache.cpp
     setupsound.cpp
     soundoutput_impl.cpp
+    soundfilter.cpp
+    soundbuffer_impl.cpp
+    cd_drive.cpp
     SoundFilters/echofilter.cpp
+    SoundFilters/fadefilter_provider.cpp
     SoundFilters/fadefilter.cpp
     SoundFilters/inverse_echofilter.cpp
     SoundFilters/echofilter_provider.cpp
@@ -54,17 +58,33 @@ target_sources(clan30Sound PRIVATE ${SOUND_SOURCES})
 # Platform-specific defines and flags
 if(WIN32)
     target_compile_definitions(clan30Sound PRIVATE -DWIN32 -DUNICODE)
-    target_link_libraries(clan30Sound PRIVATE
-        -ldsound
-        -ldxguid
-        -lwinmm
-    )
+    if(MSVC)
+        # MSVC: use library names without -l prefix
+        target_link_libraries(clan30Sound PRIVATE
+            dsound
+            dxguid
+            winmm
+            clan30Core
+        )
+    else()
+        # MinGW / Linux
+        target_compile_definitions(clan30Sound PRIVATE -DHAVE_POSIX)
+        # ALSA audio
+        find_package(ALSA REQUIRED)
+        target_link_libraries(clan30Sound PRIVATE
+            ALSA::ALSA
+            clan30Core
+        )
+        # OSS fallback
+        # find_package(OSS REQUIRED) # may not be available
+    endif()
 else()
     target_compile_definitions(clan30Sound PRIVATE -DHAVE_POSIX)
     # ALSA audio
     find_package(ALSA REQUIRED)
     target_link_libraries(clan30Sound PRIVATE
         ALSA::ALSA
+        clan30Core
     )
     # OSS fallback
     # find_package(OSS REQUIRED) # may not be available
@@ -74,6 +94,7 @@ endif()
 target_include_directories(clan30Sound PRIVATE
     "${CMAKE_SOURCE_DIR}/Sources/API"
     "${CMAKE_SOURCE_DIR}/Sources/Sound"
+    "${CMAKE_SOURCE_DIR}/Sources"
 )
 
 # Version information
