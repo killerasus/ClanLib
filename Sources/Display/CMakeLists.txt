@@ -179,11 +179,27 @@ if(WIN32)
         target_compile_definitions(clan30Display PRIVATE -DHAVE_POSIX)
         # Link X11, Xrender, pthread
         find_package(X11 REQUIRED)
-        find_package(Xrender REQUIRED)
+        # NOTE: CMake ships no FindXrender module and libxrender-dev
+        # provides no CMake config files - locate it via pkg-config
+        # (xrender.pc) with a manual fallback.
+        find_package(PkgConfig QUIET)
+        if(PKG_CONFIG_FOUND)
+            pkg_check_modules(XRENDER QUIET xrender)
+        endif()
+        if(NOT XRENDER_FOUND)
+            find_path(XRENDER_INCLUDE_DIRS NAMES X11/extensions/Xrender.h)
+            find_library(XRENDER_LIBRARIES NAMES Xrender)
+            if(XRENDER_INCLUDE_DIRS AND XRENDER_LIBRARIES)
+                set(XRENDER_FOUND TRUE)
+            endif()
+        endif()
+        if(NOT XRENDER_FOUND)
+            message(FATAL_ERROR "Xrender not found (install libxrender-dev)")
+        endif()
         find_package(Threads REQUIRED)
         target_link_libraries(clan30Display PRIVATE
             X11::X11
-            Xrender::Xrender
+            ${XRENDER_LIBRARIES}
             Threads::Threads
             -lwinmm
             -lddraw
@@ -192,18 +208,40 @@ if(WIN32)
             -lgdi32
             -lole32
         )
+        if(XRENDER_INCLUDE_DIRS)
+            target_include_directories(clan30Display PRIVATE ${XRENDER_INCLUDE_DIRS})
+        endif()
     endif()
 else()
     target_compile_definitions(clan30Display PRIVATE -DHAVE_POSIX)
     # Link X11, Xrender, pthread
     find_package(X11 REQUIRED)
-    find_package(Xrender REQUIRED)
+    # NOTE: CMake ships no FindXrender module and libxrender-dev
+    # provides no CMake config files - locate it via pkg-config
+    # (xrender.pc) with a manual fallback.
+    find_package(PkgConfig QUIET)
+    if(PKG_CONFIG_FOUND)
+        pkg_check_modules(XRENDER QUIET xrender)
+    endif()
+    if(NOT XRENDER_FOUND)
+        find_path(XRENDER_INCLUDE_DIRS NAMES X11/extensions/Xrender.h)
+        find_library(XRENDER_LIBRARIES NAMES Xrender)
+        if(XRENDER_INCLUDE_DIRS AND XRENDER_LIBRARIES)
+            set(XRENDER_FOUND TRUE)
+        endif()
+    endif()
+    if(NOT XRENDER_FOUND)
+        message(FATAL_ERROR "Xrender not found (install libxrender-dev)")
+    endif()
     find_package(Threads REQUIRED)
     target_link_libraries(clan30Display PRIVATE
         X11::X11
-        Xrender::Xrender
+        ${XRENDER_LIBRARIES}
         Threads::Threads
     )
+    if(XRENDER_INCLUDE_DIRS)
+        target_include_directories(clan30Display PRIVATE ${XRENDER_INCLUDE_DIRS})
+    endif()
 endif()
 
 # Include directories
