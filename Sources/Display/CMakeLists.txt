@@ -147,10 +147,16 @@ else()
         X11/cursor_provider_x11.cpp
     )
 
-    if(LINUX_JOYSTICK)
+    # Linux joystick support follows the autotools semantics: enabled when
+    # the system linux/joystick.h header exists (HAVE_LINUX_JOYSTICK_H gates
+    # both the provider sources and the use sites in x11_window.cpp).
+    include(CheckIncludeFile)
+    check_include_file("linux/joystick.h" HAVE_LINUX_JOYSTICK_H)
+    if(HAVE_LINUX_JOYSTICK_H)
         list(APPEND DISPLAY_SOURCES
             X11/input_device_provider_linuxjoystick.cpp
         )
+        target_compile_definitions(clan30Display PRIVATE HAVE_LINUX_JOYSTICK_H)
     endif()
 
     list(APPEND DISPLAY_SOURCES
