@@ -57,6 +57,14 @@ namespace clan
 
 /////////////////////////////////////////////////////////////////////////////
 // WinMain:
+// Exported from the DLL (via linker directive, since windows.h already
+// declares WinMain and __declspec on the definition would conflict) so
+// applications linking dynamically can use /SUBSYSTEM:WINDOWS with WinMain
+// as entry point. Static builds pick it up from the .lib automatically.
+
+#ifdef APP_EXPORT
+#pragma comment(linker, "/EXPORT:WinMain")
+#endif
 
 int WINAPI WinMain(
 	HINSTANCE hInstance,

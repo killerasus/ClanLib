@@ -255,11 +255,25 @@ if(MSVC)
 endif()
 
 # Add subdirectories for each module
+# NOTE: CMAKE_CURRENT_SOURCE_DIR (not CMAKE_SOURCE_DIR) so this project also
+# works when consumed in-tree via add_subdirectory() from another project.
 foreach(module ${CLANLIB_MODULES})
-    if(EXISTS "${CMAKE_SOURCE_DIR}/Sources/${module}/CMakeLists.txt")
-        add_subdirectory("${CMAKE_SOURCE_DIR}/Sources/${module}")
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/Sources/${module}/CMakeLists.txt")
+        add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/Sources/${module}")
     else()
         message(WARNING "CMakeLists.txt not found for module: ${module}")
+    endif()
+endforeach()
+
+# The per-module PRIVATE include dirs above use CMAKE_SOURCE_DIR, which points
+# at the parent project when consumed via add_subdirectory(). Append the
+# correct roots here (PUBLIC so dependents get them too).
+foreach(module ${CLANLIB_MODULES})
+    if(TARGET clan30${module})
+        target_include_directories(clan30${module} PUBLIC
+            "${CMAKE_CURRENT_SOURCE_DIR}/Sources"
+            "${CMAKE_CURRENT_SOURCE_DIR}/Sources/API"
+        )
     endif()
 endforeach()
 
