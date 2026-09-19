@@ -8,6 +8,27 @@ if(NOT DEFINED CMAKE_EXPORT_COMPILE_COMMANDS)
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 
+# ccache support: transparently caches compilation to speed up rebuilds.
+# Auto-enabled when ccache is found; disable with -DCLANLIB_USE_CCACHE=OFF.
+# Must be set before project()/add_subdirectory() so every module inherits it.
+option(CLANLIB_USE_CCACHE "Use ccache to speed up rebuilds when available" ON)
+if(CLANLIB_USE_CCACHE)
+    find_program(CCACHE_PROGRAM ccache)
+    if(CCACHE_PROGRAM)
+        if(CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
+            set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+            set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+        else()
+            # CMAKE_<LANG>_COMPILER_LAUNCHER needs CMake 3.18+; fall back to
+            # the legacy global rule launcher on older versions.
+            set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+        endif()
+        message(STATUS "Using ccache: ${CCACHE_PROGRAM}")
+    else()
+        message(STATUS "ccache not found - building without compiler cache (install ccache to speed up rebuilds)")
+    endif()
+endif()
+
 project(ClanLib VERSION 3.0.0 LANGUAGES C CXX)
 
 # Platform detection
