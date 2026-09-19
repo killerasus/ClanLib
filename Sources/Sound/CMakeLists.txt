@@ -46,11 +46,24 @@ if(WIN32)
         Win32/soundoutput_win32.cpp
     )
 else()
+    # ALSA backend: always built on non-Windows (tried first at runtime,
+    # see soundoutput.cpp). ALSA itself is required below.
     list(APPEND SOUND_SOURCES
-        Unix/soundoutput_oss.cpp
-        # ALSA support - enabled if ALSA found
-        # Unix/soundoutput_alsa.cpp
+        Unix/soundoutput_alsa.cpp
     )
+    # OSS backend: only a fallback, and only when the kernel OSS headers
+    # exist. Modern distros (e.g. Ubuntu) ship none of these, and /dev/dsp
+    # is obsolete - mirrors autotools AC_CHECK_HEADERS([machine/soundcard.h
+    # sys/soundcard.h soundcard.h]).
+    include(CheckIncludeFile)
+    check_include_file("sys/soundcard.h" HAVE_SYS_SOUNDCARD_H)
+    check_include_file("soundcard.h" HAVE_SOUNDCARD_H)
+    check_include_file("machine/soundcard.h" HAVE_MACHINE_SOUNDCARD_H)
+    if(HAVE_SYS_SOUNDCARD_H OR HAVE_SOUNDCARD_H OR HAVE_MACHINE_SOUNDCARD_H)
+        list(APPEND SOUND_SOURCES Unix/soundoutput_oss.cpp)
+    else()
+        message(STATUS "OSS soundcard.h not found - clanSound will use ALSA only")
+    endif()
 endif()
 
 target_sources(clan30Sound PRIVATE ${SOUND_SOURCES})
@@ -86,8 +99,18 @@ else()
         ALSA::ALSA
         clan30Core
     )
-    # OSS fallback
-    # find_package(OSS REQUIRED) # may not be available
+    # Use <alsa/asoundlib.h> (Debian/Ubuntu layout) in soundoutput_alsa.h.
+    target_compile_definitions(clan30Sound PRIVATE -DHAVE_ALSA_ASOUNDLIB_H)
+    # Enable the OSS fallback in soundoutput.cpp only when its headers were
+    # found above (HAVE_OSS_BACKEND guards the SoundOutput_OSS references).
+    if(HAVE_SYS_SOUNDCARD_H OR HAVE_SOUNDCARD_H OR HAVE_MACHINE_SOUNDCARD_H)
+        target_compile_definitions(clan30Sound PRIVATE -DHAVE_OSS_BACKEND)
+        foreach(_oss HAVE_SYS_SOUNDCARD_H HAVE_SOUNDCARD_H HAVE_MACHINE_SOUNDCARD_H)
+            if(${_oss})
+                target_compile_definitions(clan30Sound PRIVATE -D${_oss})
+            endif()
+        endforeach()
+    endif()
 endif()
 
 # Include directories

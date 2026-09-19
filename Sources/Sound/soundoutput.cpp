@@ -100,12 +100,16 @@ SoundOutput::SoundOutput(const SoundOutput_Description &desc)
 
 	if (!impl)
 	{
+#ifdef HAVE_OSS_BACKEND
 		std::shared_ptr<SoundOutput_Impl> soundoutput_impl(new SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency()));
 		impl = soundoutput_impl;
+#endif
 	}
 #else
+#ifdef HAVE_OSS_BACKEND
     std::shared_ptr<SoundOutput_Impl> soundoutput_impl(new SoundOutput_OSS(desc.get_mixing_frequency(), desc.get_mixing_latency()));
     impl = soundoutput_impl;
+#endif
 #endif
 #endif
 #endif
