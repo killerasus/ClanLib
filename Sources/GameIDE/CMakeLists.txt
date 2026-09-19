@@ -14,6 +14,7 @@ if(WIN32)
     target_link_libraries(clan30GameIDE PRIVATE clan30Core clan30Display)
 else()
     target_compile_definitions(clan30GameIDE PRIVATE -DHAVE_POSIX)
+    find_package(Threads REQUIRED)
     target_link_libraries(clan30GameIDE PRIVATE Threads::Threads)
 endif()
 
