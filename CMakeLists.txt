@@ -1,4 +1,13 @@
 cmake_minimum_required(VERSION 3.15)
+
+# Export compile commands for IDEs (clangd, VS Code IntelliSense, etc.).
+# Must be set before project()/add_subdirectory() so every module directory
+# inherits it; otherwise compile_commands.json comes out empty. Respects an
+# explicit -DCMAKE_EXPORT_COMPILE_COMMANDS=OFF on the command line.
+if(NOT DEFINED CMAKE_EXPORT_COMPILE_COMMANDS)
+    set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+endif()
+
 project(ClanLib VERSION 3.0.0 LANGUAGES C CXX)
 
 # Platform detection
@@ -319,5 +328,4 @@ if(NOT DEFINED CMAKE_INSTALL_PREFIX)
     set(CMAKE_INSTALL_PREFIX "/usr/local" CACHE PATH "Installation prefix")
 endif()
 
-# Export compile commands for IDEs
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
