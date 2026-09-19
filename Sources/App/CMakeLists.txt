@@ -26,7 +26,9 @@ if(WIN32)
     endif()
 else()
     target_compile_definitions(clan30App PRIVATE -DUNIX)
-    target_link_libraries(clan30App PRIVATE -lgdi32 -luser32 -lkernel32 clan30Core)
+    # Unix clanapp uses only libc + clanCore - the Win32 system libs
+    # (gdi32/user32/kernel32) do not exist here.
+    target_link_libraries(clan30App PRIVATE clan30Core)
 endif()
 
 # Include directories - match original autotools: -I\$(top_srcdir)/Sources

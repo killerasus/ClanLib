@@ -233,14 +233,37 @@ else()
     if(NOT XRENDER_FOUND)
         message(FATAL_ERROR "Xrender not found (install libxrender-dev)")
     endif()
+    # FreeType (Font/X11/font_engine_freetype.*) - headers live under
+    # freetype2/, include dirs come with the imported target.
+    find_package(Freetype REQUIRED)
+    # FontConfig (X11/font_config.cpp, FcInitLoadConfigAndFonts) - CMake
+    # ships no find module, so use pkg-config like Xrender above.
+    if(PKG_CONFIG_FOUND)
+        pkg_check_modules(FONTCONFIG QUIET fontconfig)
+    endif()
+    if(NOT FONTCONFIG_FOUND)
+        find_path(FONTCONFIG_INCLUDE_DIRS NAMES fontconfig/fontconfig.h)
+        find_library(FONTCONFIG_LIBRARIES NAMES fontconfig)
+        if(FONTCONFIG_INCLUDE_DIRS AND FONTCONFIG_LIBRARIES)
+            set(FONTCONFIG_FOUND TRUE)
+        endif()
+    endif()
+    if(NOT FONTCONFIG_FOUND)
+        message(FATAL_ERROR "FontConfig not found (install libfontconfig-dev)")
+    endif()
     find_package(Threads REQUIRED)
     target_link_libraries(clan30Display PRIVATE
         X11::X11
         ${XRENDER_LIBRARIES}
+        Freetype::Freetype
+        ${FONTCONFIG_LIBRARIES}
         Threads::Threads
     )
     if(XRENDER_INCLUDE_DIRS)
         target_include_directories(clan30Display PRIVATE ${XRENDER_INCLUDE_DIRS})
+    endif()
+    if(FONTCONFIG_INCLUDE_DIRS)
+        target_include_directories(clan30Display PRIVATE ${FONTCONFIG_INCLUDE_DIRS})
     endif()
 endif()
 
