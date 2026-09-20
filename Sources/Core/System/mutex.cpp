@@ -45,7 +45,10 @@ namespace clan
 // suck:
 extern "C"
 {
-#if defined (__FreeBSD__) || defined(__OpenBSD__)
+// Note: the glibc-specific pthread_mutexattr_setkind_np was removed from
+// glibc (no longer declared nor shipped), so Linux uses the standard
+// pthread_mutexattr_settype like FreeBSD/Apple.
+#if defined (__FreeBSD__) || defined(__OpenBSD__) || defined(__linux__)
 	int pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind);
 #else
 	int pthread_mutexattr_setkind_np(pthread_mutexattr_t *attr, int kind);
@@ -63,7 +66,7 @@ Mutex::Mutex()
 #else
 	pthread_mutexattr_t attr;
 	pthread_mutexattr_init(&attr);
-	#if defined(__FreeBSD__) || defined(__APPLE__)
+	#if defined(__FreeBSD__) || defined(__APPLE__) || defined(__linux__)
 	pthread_mutexattr_settype(&attr, PTHREAD_MUTEX_RECURSIVE);
 	#else
 	#if PTHREAD_MUTEX_RECURSIVE_NP
