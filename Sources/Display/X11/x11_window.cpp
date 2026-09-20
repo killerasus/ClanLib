@@ -230,7 +230,13 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 		win_y = 0;
 	}
 
-	if (win_x == -1 && win_y == -1)
+	// A (-1,-1) position means "let the window manager decide". In that case
+	// still compute centered fallback coordinates for XCreateWindow, but do
+	// not claim PPosition below: DisplayWidth/Height can report a bogus
+	// virtual desktop size (e.g. XWayland/WSLg), which used to park every
+	// default-positioned window off-screen.
+	bool position_requested = !(win_x == -1 && win_y == -1);
+	if (!position_requested)
 	{
 		int disp_width = DisplayWidth(display, current_screen);
 		int disp_height = DisplayHeight(display, current_screen);
@@ -435,7 +441,9 @@ void X11Window::create(XVisualInfo *visual, DisplayWindowSite *new_site, const D
 	size_hints->width_inc = 1;
 	size_hints->height_inc = 1;
 	size_hints->win_gravity = NorthWestGravity;
-	size_hints->flags       = PSize|PBaseSize|PPosition|PMinSize|PResizeInc|PWinGravity;
+	size_hints->flags       = PSize|PBaseSize|PMinSize|PResizeInc|PWinGravity;
+	if (position_requested)
+		size_hints->flags |= PPosition;
 
 	if (!resize_enabled)
 	{
